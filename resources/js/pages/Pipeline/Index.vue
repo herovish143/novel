@@ -25,8 +25,13 @@ interface RunItem {
     steps: StepItem[];
 }
 
+interface Paginated<T> {
+    data: T[];
+    total: number;
+}
+
 const props = defineProps<{
-    runs: RunItem[];
+    runs: Paginated<RunItem>;
     activeRunsCount: number;
     failedStepsCount: number;
     queues: QueueItem[];
@@ -84,10 +89,13 @@ const resumeRun = (chapterId: number) => {
 
         <!-- Production Runs & Steps History -->
         <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-            <h2 class="text-base font-bold text-gray-900 dark:text-gray-100">Recent Production Runs</h2>
+            <div class="flex items-center justify-between">
+                <h2 class="text-base font-bold text-gray-900 dark:text-gray-100">Recent Production Runs</h2>
+                <span class="text-xs text-gray-400 font-semibold">Total: {{ runs.total }}</span>
+            </div>
 
             <div class="mt-4 space-y-4">
-                <div v-for="run in runs" :key="run.id" class="rounded-xl border border-gray-100 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-950">
+                <div v-for="run in runs.data" :key="run.id" class="rounded-xl border border-gray-100 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-950">
                     <div class="flex items-center justify-between">
                         <div>
                             <span class="text-[10px] font-bold text-indigo-600 dark:text-indigo-400">{{ run.novel_title }}</span>

@@ -14,27 +14,27 @@ class PipelineMonitorAction
 
     public function handle(): array
     {
-        $runs = ProductionRun::with(['chapter.novel', 'steps'])
+        $paginatedRuns = ProductionRun::with(['chapter.novel', 'steps'])
             ->latest()
-            ->take(20)
-            ->get()
-            ->map(fn ($r): array => [
-                'id' => $r->id,
-                'chapter_id' => $r->chapter_id,
-                'novel_title' => $r->chapter->novel->title ?? 'Unknown Novel',
-                'chapter_title' => "Ch. {$r->chapter->chapter_number}: {$r->chapter->title}",
-                'status' => $r->status,
-                'current_stage' => $r->current_stage,
-                'started_at' => $r->started_at?->diffForHumans() ?? 'Just now',
-                'steps' => $r->steps->map(fn ($s): array => [
-                    'stage' => $s->stage,
-                    'status' => $s->status,
-                    'attempts' => $s->attempts,
-                    'error' => $s->error,
-                ]),
-            ]);
+            ->paginate(15);
 
-        $activeRunsCount = ProductionRun::where('status', 'RUNNING')->orWhere('status', 'IMPORTED')->count();
+        $runsData = collect($paginatedRuns->items())->map(fn ($r): array => [
+            'id' => $r->id,
+            'chapter_id' => $r->chapter_id,
+            'novel_title' => $r->chapter->novel->title ?? 'Unknown Novel',
+            'chapter_title' => "Ch. {$r->chapter->chapter_number}: {$r->chapter->title}",
+            'status' => $r->status,
+            'current_stage' => $r->current_stage,
+            'started_at' => $r->started_at?->diffForHumans() ?? 'Just now',
+            'steps' => $r->steps->map(fn ($s): array => [
+                'stage' => $s->stage,
+                'status' => $s->status,
+                'attempts' => $s->attempts,
+                'error' => $s->error,
+            ]),
+        ]);
+
+        $activeRunsCount = ProductionRun::whereIn('status', ['RUNNING', 'IMPORTED'])->count();
         $failedStepsCount = ProductionStep::where('status', 'FAILED')->count();
 
         $queues = [
@@ -47,7 +47,11 @@ class PipelineMonitorAction
         ];
 
         return [
-            'runs' => $runs,
+            'runs' => [
+                'data' => $runsData,
+                'links' => $paginatedRuns->linkCollection()->toArray(),
+                'total' => $paginatedRuns->total(),
+            ],
             'activeRunsCount' => $activeRunsCount,
             'failedStepsCount' => $failedStepsCount,
             'queues' => $queues,

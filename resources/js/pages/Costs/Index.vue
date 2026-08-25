@@ -28,12 +28,17 @@ interface UsageItem {
     created_at: string;
 }
 
+interface Paginated<T> {
+    data: T[];
+    total: number;
+}
+
 const props = defineProps<{
     totalSpend: number;
     spendByService: ServiceCost[];
     spendByProvider: ProviderCost[];
     novelsCost: NovelCost[];
-    recentUsages: UsageItem[];
+    recentUsages: Paginated<UsageItem>;
 }>();
 </script>
 
@@ -82,10 +87,13 @@ const props = defineProps<{
 
         <!-- Recent Usage Logs -->
         <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-            <h2 class="text-base font-bold text-gray-900 dark:text-gray-100">Recent External API Usage Calls</h2>
+            <div class="flex items-center justify-between">
+                <h2 class="text-base font-bold text-gray-900 dark:text-gray-100">Recent External API Usage Calls</h2>
+                <span class="text-xs text-gray-400 font-semibold">Total: {{ recentUsages.total }}</span>
+            </div>
 
             <div class="mt-4 space-y-2">
-                <div v-for="u in recentUsages" :key="u.id" class="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 p-3 text-xs dark:border-gray-800 dark:bg-gray-950">
+                <div v-for="u in recentUsages.data" :key="u.id" class="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 p-3 text-xs dark:border-gray-800 dark:bg-gray-950">
                     <div>
                         <span class="font-bold text-indigo-600 dark:text-indigo-400">{{ u.provider }}</span>
                         <span class="ml-2 font-mono text-gray-700 dark:text-gray-300">{{ u.service }} ({{ u.model }})</span>

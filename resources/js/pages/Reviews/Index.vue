@@ -42,11 +42,16 @@ interface PendingVideo {
     created_at: string;
 }
 
+interface Paginated<T> {
+    data: T[];
+    total: number;
+}
+
 const props = defineProps<{
-    scripts: PendingScript[];
-    audio: PendingAudio[];
-    visuals: PendingVisual[];
-    videos: PendingVideo[];
+    scripts: Paginated<PendingScript>;
+    audio: Paginated<PendingAudio>;
+    visuals: Paginated<PendingVisual>;
+    videos: Paginated<PendingVideo>;
 }>();
 
 const activeTab = ref<'scripts' | 'audio' | 'visuals' | 'videos'>('scripts');
@@ -71,38 +76,38 @@ const activeTab = ref<'scripts' | 'audio' | 'visuals' | 'videos'>('scripts');
                 class="border-b-2 px-4 py-2.5 text-xs font-bold transition-colors"
                 :class="activeTab === 'scripts' ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'"
             >
-                Scripts ({{ scripts.length }})
+                Scripts ({{ scripts.total }})
             </button>
             <button
                 @click="activeTab = 'audio'"
                 class="border-b-2 px-4 py-2.5 text-xs font-bold transition-colors"
                 :class="activeTab === 'audio' ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'"
             >
-                Narration Audio ({{ audio.length }})
+                Narration Audio ({{ audio.total }})
             </button>
             <button
                 @click="activeTab = 'visuals'"
                 class="border-b-2 px-4 py-2.5 text-xs font-bold transition-colors"
                 :class="activeTab === 'visuals' ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'"
             >
-                Visual Scenes ({{ visuals.length }})
+                Visual Scenes ({{ visuals.total }})
             </button>
             <button
                 @click="activeTab = 'videos'"
                 class="border-b-2 px-4 py-2.5 text-xs font-bold transition-colors"
                 :class="activeTab === 'videos' ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'"
             >
-                Rendered Videos ({{ videos.length }})
+                Rendered Videos ({{ videos.total }})
             </button>
         </div>
 
         <!-- Tab 1: Scripts Queue -->
         <div v-if="activeTab === 'scripts'" class="space-y-3">
-            <div v-if="scripts.length === 0" class="rounded-xl border border-gray-200 bg-white p-8 text-center text-xs text-gray-400 dark:border-gray-800 dark:bg-gray-900">
+            <div v-if="scripts.data.length === 0" class="rounded-xl border border-gray-200 bg-white p-8 text-center text-xs text-gray-400 dark:border-gray-800 dark:bg-gray-900">
                 No scripts currently awaiting review.
             </div>
 
-            <div v-for="s in scripts" :key="s.id" class="flex items-center justify-between rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+            <div v-for="s in scripts.data" :key="s.id" class="flex items-center justify-between rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
                 <div>
                     <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">{{ s.novel_title }}</span>
                     <h3 class="text-sm font-bold text-gray-900 dark:text-gray-100">{{ s.chapter_title }}</h3>
@@ -120,11 +125,11 @@ const activeTab = ref<'scripts' | 'audio' | 'visuals' | 'videos'>('scripts');
 
         <!-- Tab 2: Narration Audio Queue -->
         <div v-if="activeTab === 'audio'" class="space-y-3">
-            <div v-if="audio.length === 0" class="rounded-xl border border-gray-200 bg-white p-8 text-center text-xs text-gray-400 dark:border-gray-800 dark:bg-gray-900">
+            <div v-if="audio.data.length === 0" class="rounded-xl border border-gray-200 bg-white p-8 text-center text-xs text-gray-400 dark:border-gray-800 dark:bg-gray-900">
                 No narration segments awaiting review.
             </div>
 
-            <div v-for="a in audio" :key="a.id" class="flex items-center justify-between rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+            <div v-for="a in audio.data" :key="a.id" class="flex items-center justify-between rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
                 <div>
                     <span class="text-xs font-bold text-gray-900 dark:text-gray-100">Audio Segment #{{ a.id }}</span>
                     <p class="text-xs text-gray-400">Provider: {{ a.provider }} • {{ (a.duration_ms / 1000).toFixed(1) }}s • Cost: ${{ a.cost.toFixed(4) }}</p>
@@ -135,11 +140,11 @@ const activeTab = ref<'scripts' | 'audio' | 'visuals' | 'videos'>('scripts');
 
         <!-- Tab 3: Visual Scenes Queue -->
         <div v-if="activeTab === 'visuals'" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div v-if="visuals.length === 0" class="col-span-full rounded-xl border border-gray-200 bg-white p-8 text-center text-xs text-gray-400 dark:border-gray-800 dark:bg-gray-900">
+            <div v-if="visuals.data.length === 0" class="col-span-full rounded-xl border border-gray-200 bg-white p-8 text-center text-xs text-gray-400 dark:border-gray-800 dark:bg-gray-900">
                 No scene visuals awaiting review.
             </div>
 
-            <div v-for="v in visuals" :key="v.id" class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+            <div v-for="v in visuals.data" :key="v.id" class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
                 <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400">Scene #{{ v.scene_id }}</span>
                 <p class="mt-1 font-mono text-[10px] text-gray-400 truncate">{{ v.storage_path }}</p>
                 <div class="mt-3 flex items-center justify-between text-xs">
@@ -151,11 +156,11 @@ const activeTab = ref<'scripts' | 'audio' | 'visuals' | 'videos'>('scripts');
 
         <!-- Tab 4: Rendered Videos Queue -->
         <div v-if="activeTab === 'videos'" class="space-y-3">
-            <div v-if="videos.length === 0" class="rounded-xl border border-gray-200 bg-white p-8 text-center text-xs text-gray-400 dark:border-gray-800 dark:bg-gray-900">
+            <div v-if="videos.data.length === 0" class="rounded-xl border border-gray-200 bg-white p-8 text-center text-xs text-gray-400 dark:border-gray-800 dark:bg-gray-900">
                 No rendered videos awaiting final QA approval.
             </div>
 
-            <div v-for="v in videos" :key="v.id" class="flex items-center justify-between rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+            <div v-for="v in videos.data" :key="v.id" class="flex items-center justify-between rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
                 <div>
                     <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">{{ v.novel_title }}</span>
                     <h3 class="text-sm font-bold text-gray-900 dark:text-gray-100">{{ v.chapter_title }}</h3>
