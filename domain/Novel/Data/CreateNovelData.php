@@ -4,20 +4,40 @@ declare(strict_types=1);
 
 namespace Domain\Novel\Data;
 
+use Domain\Novel\Models\Novel;
+use Spatie\LaravelData\Attributes\MapName;
+use Spatie\LaravelData\Attributes\TypeScript;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
+#[TypeScript]
+#[MapName(SnakeCaseMapper::class)]
 class CreateNovelData extends Data
 {
     public function __construct(
         public string $title,
-        public string $original_language,
-        public string $output_language,
-        public ?string $source_url,
+        public string $originalLanguage,
+        public string $outputLanguage,
+        public ?string $sourceUrl,
         public ?string $description,
-        public string $visual_style,
-        public string $narration_style,
-        public float $max_cost_per_episode,
+        public string $visualStyle,
+        public string $narrationStyle,
+        public float $maxCostPerEpisode,
     ) {}
+
+    public static function fromModel(Novel $novel): self
+    {
+        return new self(
+            title: $novel->title,
+            originalLanguage: $novel->original_language,
+            outputLanguage: $novel->output_language,
+            sourceUrl: $novel->source_url,
+            description: $novel->description,
+            visualStyle: $novel->visual_style,
+            narrationStyle: $novel->narration_style,
+            maxCostPerEpisode: (float) $novel->max_cost_per_episode,
+        );
+    }
 
     /**
      * @return array<string, mixed>

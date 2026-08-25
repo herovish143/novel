@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace Domain\Voice\Data;
 
+use Spatie\LaravelData\Attributes\MapName;
+use Spatie\LaravelData\Attributes\TypeScript;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
+#[TypeScript]
+#[MapName(SnakeCaseMapper::class)]
 class SpeechResultData extends Data
 {
     public function __construct(

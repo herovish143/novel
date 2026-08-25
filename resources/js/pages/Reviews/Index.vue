@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { Head, Link } from '@inertiajs/vue3';
 
-interface PendingScript {
+type PendingScript = {
     id: number;
     chapter_id: number;
     novel_title: string;
@@ -11,18 +11,18 @@ interface PendingScript {
     word_count: number;
     status: string;
     created_at: string;
-}
+};
 
-interface PendingAudio {
+type PendingAudio = {
     id: number;
     provider: string;
     duration_ms: number;
     cost: number;
     status: string;
     created_at: string;
-}
+};
 
-interface PendingVisual {
+type PendingVisual = {
     id: number;
     scene_id: number;
     asset_type: string;
@@ -30,9 +30,9 @@ interface PendingVisual {
     cost: number;
     status: string;
     created_at: string;
-}
+};
 
-interface PendingVideo {
+type PendingVideo = {
     id: number;
     chapter_id: number;
     novel_title: string;
@@ -40,12 +40,12 @@ interface PendingVideo {
     duration_ms: number;
     status: string;
     created_at: string;
-}
+};
 
-interface Paginated<T> {
+type Paginated<T> = {
     data: T[];
     total: number;
-}
+};
 
 const props = defineProps<{
     scripts: Paginated<PendingScript>;
@@ -73,28 +73,28 @@ const activeTab = ref<'scripts' | 'audio' | 'visuals' | 'videos'>('scripts');
         <div class="flex border-b border-gray-200 dark:border-gray-800">
             <button
                 @click="activeTab = 'scripts'"
-                class="border-b-2 px-4 py-2.5 text-xs font-bold transition-colors"
+                class="border-b-2 px-4 py-2.5 text-xs font-bold transition-colors cursor-pointer"
                 :class="activeTab === 'scripts' ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'"
             >
                 Scripts ({{ scripts.total }})
             </button>
             <button
                 @click="activeTab = 'audio'"
-                class="border-b-2 px-4 py-2.5 text-xs font-bold transition-colors"
+                class="border-b-2 px-4 py-2.5 text-xs font-bold transition-colors cursor-pointer"
                 :class="activeTab === 'audio' ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'"
             >
                 Narration Audio ({{ audio.total }})
             </button>
             <button
                 @click="activeTab = 'visuals'"
-                class="border-b-2 px-4 py-2.5 text-xs font-bold transition-colors"
+                class="border-b-2 px-4 py-2.5 text-xs font-bold transition-colors cursor-pointer"
                 :class="activeTab === 'visuals' ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'"
             >
                 Visual Scenes ({{ visuals.total }})
             </button>
             <button
                 @click="activeTab = 'videos'"
-                class="border-b-2 px-4 py-2.5 text-xs font-bold transition-colors"
+                class="border-b-2 px-4 py-2.5 text-xs font-bold transition-colors cursor-pointer"
                 :class="activeTab === 'videos' ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'"
             >
                 Rendered Videos ({{ videos.total }})

@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3';
 
-interface QueueItem {
+type QueueItem = {
     name: string;
     depth: number;
     status: string;
-}
+};
 
-interface StepItem {
+type StepItem = {
     stage: string;
     status: string;
     attempts: number;
     error: string | null;
-}
+};
 
-interface RunItem {
+type RunItem = {
     id: number;
     chapter_id: number;
     novel_title: string;
@@ -23,12 +23,12 @@ interface RunItem {
     current_stage: string;
     started_at: string;
     steps: StepItem[];
-}
+};
 
-interface Paginated<T> {
+type Paginated<T> = {
     data: T[];
     total: number;
-}
+};
 
 const props = defineProps<{
     runs: Paginated<RunItem>;
@@ -108,7 +108,7 @@ const resumeRun = (chapterId: number) => {
                             <button
                                 v-if="run.status === 'FAILED' || run.status === 'PAUSED'"
                                 @click="resumeRun(run.chapter_id)"
-                                class="rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-bold text-white shadow hover:bg-amber-500"
+                                class="rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-bold text-white shadow hover:bg-amber-500 cursor-pointer"
                             >
                                 Resume Pipeline
                             </button>

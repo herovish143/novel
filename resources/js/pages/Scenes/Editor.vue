@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { Head, router } from '@inertiajs/vue3';
 
-interface SceneAsset {
+type SceneAsset = {
     id: number;
     asset_type: string;
     prompt: string;
@@ -11,9 +11,9 @@ interface SceneAsset {
     height: number;
     cost: number;
     provider: string;
-}
+};
 
-interface Scene {
+type Scene = {
     id: number;
     sequence: number;
     start_ms: number;
@@ -23,13 +23,13 @@ interface Scene {
     camera_motion: string;
     status: string;
     assets: SceneAsset[];
-}
+};
 
-interface Chapter {
+type Chapter = {
     id: number;
     chapter_number: number;
     title: string;
-}
+};
 
 const props = defineProps<{
     chapter: Chapter;
@@ -125,7 +125,7 @@ const regenerateScene = (sceneId: number) => {
                     <button
                         @click="regenerateScene(scene.id)"
                         :disabled="regeneratingSceneId === scene.id"
-                        class="rounded bg-indigo-600 px-3 py-1 text-[11px] font-semibold text-white shadow hover:bg-indigo-500 disabled:opacity-50"
+                        class="rounded bg-indigo-600 px-3 py-1 text-[11px] font-semibold text-white shadow hover:bg-indigo-500 disabled:opacity-50 cursor-pointer"
                     >
                         {{ regeneratingSceneId === scene.id ? 'Regenerating...' : '🔄 Regenerate' }}
                     </button>

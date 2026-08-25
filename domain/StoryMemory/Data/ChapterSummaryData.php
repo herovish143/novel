@@ -3,34 +3,39 @@
 namespace Domain\StoryMemory\Data;
 
 use Domain\StoryMemory\Models\ChapterSummary;
+use Spatie\LaravelData\Attributes\MapName;
+use Spatie\LaravelData\Attributes\TypeScript;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
+#[TypeScript]
+#[MapName(SnakeCaseMapper::class)]
 class ChapterSummaryData extends Data
 {
     /**
-     * @param  list<string>|null  $important_reveals
-     * @param  list<string>|null  $unresolved_questions
+     * @param  list<string>|null  $importantReveals
+     * @param  list<string>|null  $unresolvedQuestions
      */
     public function __construct(
         public int $id,
-        public int $chapter_id,
+        public int $chapterId,
         public string $summary,
-        public ?array $important_reveals = null,
-        public ?array $unresolved_questions = null,
-        public ?string $continuity_notes = null,
-        public ?string $ai_model = null,
+        public ?array $importantReveals = null,
+        public ?array $unresolvedQuestions = null,
+        public ?string $continuityNotes = null,
+        public ?string $aiModel = null,
     ) {}
 
     public static function fromModel(ChapterSummary $summary): self
     {
         return new self(
             id: $summary->id,
-            chapter_id: $summary->chapter_id,
+            chapterId: $summary->chapter_id,
             summary: $summary->summary,
-            important_reveals: $summary->important_reveals,
-            unresolved_questions: $summary->unresolved_questions,
-            continuity_notes: $summary->continuity_notes,
-            ai_model: $summary->ai_model,
+            importantReveals: $summary->important_reveals,
+            unresolvedQuestions: $summary->unresolved_questions,
+            continuityNotes: $summary->continuity_notes,
+            aiModel: $summary->ai_model,
         );
     }
 }

@@ -85,10 +85,10 @@ class ImportChapterAction
     {
         $chapter = $this->handle(
             novel: $novel,
-            chapterNumber: $data->chapter_number,
+            chapterNumber: $data->chapterNumber,
             title: $data->title,
-            sourceText: $data->source_text,
-            sourceUrl: $data->source_url
+            sourceText: $data->sourceText,
+            sourceUrl: $data->sourceUrl
         );
 
         return to_route('chapters.show', $chapter->id)->with('success', 'Chapter imported successfully.');

@@ -1,16 +1,21 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import { router } from '@inertiajs/vue3';
+import { dashboard } from '@/routes';
+import { index as novelIndex } from '@/routes/novels';
+import { index as reviewIndex } from '@/routes/reviews';
+import { index as pipelineIndex } from '@/routes/pipeline';
+import { index as costIndex } from '@/routes/costs';
 
 const isOpen = ref(false);
 const searchQuery = ref('');
 
 const commands = [
-    { name: 'Go to Dashboard', href: '/dashboard', category: 'Navigation' },
-    { name: 'View All Web Novels', href: '/novels', category: 'Navigation' },
-    { name: 'Open Review Queue', href: '/reviews', category: 'Operations' },
-    { name: 'Pipeline Monitor & Queues', href: '/pipeline', category: 'Operations' },
-    { name: 'Cost Analytics & Spend', href: '/costs', category: 'Analytics' },
+    { name: 'Go to Dashboard', href: dashboard(), category: 'Navigation' },
+    { name: 'View All Web Novels', href: novelIndex.url(), category: 'Navigation' },
+    { name: 'Open Review Queue', href: reviewIndex.url(), category: 'Operations' },
+    { name: 'Pipeline Monitor & Queues', href: pipelineIndex.url(), category: 'Operations' },
+    { name: 'Cost Analytics & Spend', href: costIndex.url(), category: 'Analytics' },
 ];
 
 const toggle = () => {
@@ -45,7 +50,7 @@ onUnmounted(() => {
         <!-- Trigger Badge in Header -->
         <button
             @click="toggle"
-            class="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-100 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400"
+            class="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-100 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 cursor-pointer"
         >
             <span>Search or type command...</span>
             <kbd class="rounded border border-gray-300 bg-white px-1.5 py-0.5 text-[10px] font-semibold text-gray-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">

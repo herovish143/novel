@@ -1,37 +1,37 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
 
-interface ServiceCost {
+type ServiceCost = {
     service: string;
     total_cost: number;
     count: number;
-}
+};
 
-interface ProviderCost {
+type ProviderCost = {
     provider: string;
     total_cost: number;
-}
+};
 
-interface NovelCost {
+type NovelCost = {
     id: number;
     title: string;
     max_cost_per_episode: number;
     chapters_count: number;
-}
+};
 
-interface UsageItem {
+type UsageItem = {
     id: number;
     provider: string;
     service: string;
     model: string;
     estimated_cost: number;
     created_at: string;
-}
+};
 
-interface Paginated<T> {
+type Paginated<T> = {
     data: T[];
     total: number;
-}
+};
 
 const props = defineProps<{
     totalSpend: number;
