@@ -14,16 +14,29 @@ class CreateNovelAction
 
     public function handle(CreateNovelData $data): Novel
     {
-        $attributes = $data->toArray();
+        $attributes = collect($data->toArray())
+            ->except(['pdf_file', 'pdfFile'])
+            ->toArray();
+
         $attributes['slug'] = Str::slug($data->title).'-'.rand(100, 999);
 
-        return Novel::create($attributes);
+        $novel = Novel::create($attributes);
+
+        if ($data->pdfFile) {
+            app(ExtractPdfChaptersAction::class)->handle($novel, $data->pdfFile->getRealPath());
+        }
+
+        return $novel;
     }
 
     public function asController(CreateNovelData $data): RedirectResponse
     {
-        $this->handle($data);
+        $novel = $this->handle($data);
 
-        return to_route('novels.index')->with('success', 'Novel created successfully.');
+        $message = $data->pdfFile
+            ? 'Novel created and PDF chapters extracted successfully.'
+            : 'Novel created successfully.';
+
+        return to_route('novels.show', $novel->id)->with('success', $message);
     }
 }

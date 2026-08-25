@@ -55,7 +55,7 @@ test('authenticated user can view novel list and create novel', function (): voi
     ];
 
     $this->post(route('novels.store'), $novelData)
-        ->assertRedirect(route('novels.index'));
+        ->assertRedirect(route('novels.show', 1));
 
     $this->assertDatabaseHas('novels', ['title' => 'Shadow Slave Test']);
 });

@@ -2,6 +2,7 @@
 
 namespace Domain\Novel\Actions;
 
+use Domain\DocumentImport\Data\DocumentImportData;
 use Domain\Novel\Data\ChapterData;
 use Domain\Novel\Data\NovelData;
 use Domain\Novel\Models\Novel;
@@ -28,10 +29,15 @@ class ShowNovelAction
             ->orderBy('canonical_name')
             ->paginate(20);
 
+        $documentImports = $novel->documentImports()
+            ->latest()
+            ->get();
+
         return [
             'novel' => NovelData::from($novel),
             'chapters' => ChapterData::collect($chapters),
             'characters' => CharacterData::collect($characters),
+            'documentImports' => DocumentImportData::collect($documentImports),
         ];
     }
 

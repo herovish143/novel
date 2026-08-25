@@ -3,6 +3,7 @@
 namespace Domain\Novel\Models;
 
 use Database\Factories\NovelFactory;
+use Domain\DocumentImport\Models\DocumentImport;
 use Domain\Shared\Models\Pronunciation;
 use Domain\StoryMemory\Models\Ability;
 use Domain\StoryMemory\Models\Character;
@@ -73,6 +74,14 @@ class Novel extends Model
     public function chapters(): HasMany
     {
         return $this->hasMany(Chapter::class);
+    }
+
+    /**
+     * @return HasMany<DocumentImport, $this>
+     */
+    public function documentImports(): HasMany
+    {
+        return $this->hasMany(DocumentImport::class);
     }
 
     /**

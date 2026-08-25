@@ -1,8 +1,17 @@
 <?php
 
 use Domain\Billing\Actions\CostsDashboardAction;
+use Domain\DocumentImport\Actions\ApproveChapterCandidateAction;
+use Domain\DocumentImport\Actions\CreatePdfImportAction;
+use Domain\DocumentImport\Actions\ImportApprovedChaptersAction;
+use Domain\DocumentImport\Actions\MergeChapterCandidatesAction;
+use Domain\DocumentImport\Actions\ShowDocumentImportAction;
+use Domain\DocumentImport\Actions\SkipChapterCandidateAction;
+use Domain\DocumentImport\Actions\SplitChapterCandidateAction;
+use Domain\DocumentImport\Actions\UpdateChapterCandidateAction;
 use Domain\Novel\Actions\AnalyzeChapterAction;
 use Domain\Novel\Actions\CreateNovelAction;
+use Domain\Novel\Actions\ExtractPdfChaptersAction;
 use Domain\Novel\Actions\ImportChapterAction;
 use Domain\Novel\Actions\ListNovelsAction;
 use Domain\Novel\Actions\ShowChapterAction;
@@ -39,6 +48,17 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('/novels', ListNovelsAction::class)->name('novels.index');
     Route::post('/novels', CreateNovelAction::class)->name('novels.store');
     Route::get('/novels/{novel}', ShowNovelAction::class)->name('novels.show');
+    Route::post('/novels/{novel}/pdf/import', ExtractPdfChaptersAction::class)->name('novels.pdf.import');
+    Route::post('/novels/{novel}/pdf/upload', CreatePdfImportAction::class)->name('novels.pdf.upload');
+
+    // Document Import Candidate Review Routes
+    Route::get('/document-imports/{documentImport}', ShowDocumentImportAction::class)->name('document-imports.show');
+    Route::post('/document-imports/{documentImport}/import', ImportApprovedChaptersAction::class)->name('document-imports.import');
+    Route::patch('/chapter-candidates/{candidate}', UpdateChapterCandidateAction::class)->name('chapter-candidates.update');
+    Route::post('/chapter-candidates/{candidate}/approve', ApproveChapterCandidateAction::class)->name('chapter-candidates.approve');
+    Route::post('/chapter-candidates/{candidate}/skip', SkipChapterCandidateAction::class)->name('chapter-candidates.skip');
+    Route::post('/chapter-candidates/{candidate}/split', SplitChapterCandidateAction::class)->name('chapter-candidates.split');
+    Route::post('/chapter-candidates/{candidate}/merge-next', MergeChapterCandidatesAction::class)->name('chapter-candidates.merge-next');
 
     Route::post('/novels/{novel}/chapters', ImportChapterAction::class)->name('chapters.store');
     Route::get('/chapters/{chapter}', ShowChapterAction::class)->name('chapters.show');
