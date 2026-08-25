@@ -9,5 +9,9 @@ parameters:
         - config/
         - database/
         - routes/
+        - tests/
+
+    bootstrapFiles:
+        - vendor/rector/rector/vendor/autoload.php
 
     level: 7

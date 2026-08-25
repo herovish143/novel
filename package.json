@@ -6,10 +6,13 @@
         "build": "vite build",
         "build:ssr": "vite build && vite build --ssr",
         "dev": "vite",
-        "format": "prettier --write resources/",
-        "format:check": "prettier --check resources/",
-        "lint": "eslint . --fix",
-        "lint:check": "eslint .",
+        "format": "prettier --write 'resources/**/*.{ts,js,vue,css}' 'package.json'",
+        "format:check": "prettier --check 'resources/**/*.{ts,js,vue,css}' 'package.json'",
+        "lint": "prettier --check 'resources/**/*.{ts,js,vue,css}' 'package.json' && npm run lint:eslint",
+        "lint:fix": "prettier --write 'resources/**/*.{ts,js,vue,css}' 'package.json' && npm run lint:eslint:fix",
+        "lint:check": "npm run lint",
+        "lint:eslint": "eslint resources/js",
+        "lint:eslint:fix": "eslint --fix resources/js",
         "types:check": "vue-tsc --noEmit"
     },
     "devDependencies": {
