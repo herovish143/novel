@@ -3,30 +3,35 @@
 namespace Domain\StoryMemory\Data;
 
 use Domain\StoryMemory\Models\StoryEvent;
+use Spatie\LaravelData\Attributes\MapName;
+use Spatie\LaravelData\Attributes\TypeScript;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
+#[TypeScript]
+#[MapName(SnakeCaseMapper::class)]
 class StoryEventData extends Data
 {
     public function __construct(
         public int $id,
-        public int $novel_id,
-        public int $chapter_id,
+        public int $novelId,
+        public int $chapterId,
         public int $sequence,
-        public string $event_type,
+        public string $eventType,
         public string $description,
-        public int $importance_score,
+        public int $importanceScore,
     ) {}
 
     public static function fromModel(StoryEvent $event): self
     {
         return new self(
             id: $event->id,
-            novel_id: $event->novel_id,
-            chapter_id: $event->chapter_id,
+            novelId: $event->novel_id,
+            chapterId: $event->chapter_id,
             sequence: $event->sequence,
-            event_type: $event->event_type,
+            eventType: $event->event_type,
             description: $event->description,
-            importance_score: $event->importance_score,
+            importanceScore: $event->importance_score,
         );
     }
 }

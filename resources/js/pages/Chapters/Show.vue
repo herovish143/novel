@@ -2,51 +2,51 @@
 import { ref } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 
-interface Novel {
+type Novel = {
     id: number;
     title: string;
     rights_status?: string;
-}
+};
 
-interface ChapterSummary {
+type ChapterSummary = {
     summary: string;
     important_reveals: string[] | null;
     unresolved_questions: string[] | null;
-}
+};
 
-interface StoryEvent {
+type StoryEvent = {
     id: number;
     sequence: number;
     description: string;
     importance_score: number;
-}
+};
 
-interface Script {
+type Script = {
     id: number;
     version: number;
     status: string;
     word_count: number;
     character_count: number;
-}
+};
 
-interface Subtitle {
+type Subtitle = {
     format: string;
     url: string;
-}
+};
 
-interface ProductionStep {
+type ProductionStep = {
     stage: string;
     status: string;
-}
+};
 
-interface ProductionRun {
+type ProductionRun = {
     id: number;
     status: string;
     current_stage: string;
     steps: ProductionStep[];
-}
+};
 
-interface Publication {
+type Publication = {
     title: string;
     description: string;
     tags: string[];
@@ -54,33 +54,33 @@ interface Publication {
     youtube_video_id: string;
     publish_status: string;
     thumbnail_url: string | null;
-}
+};
 
-interface Budget {
+type Budget = {
     allowed: boolean;
     currentCost: number;
     limit: number;
     remaining: number;
-}
+};
 
-interface SourceVersion {
+type SourceVersion = {
     id: number;
     version: number;
     import_method: string;
     imported_by: string | null;
     content_hash: string;
     created_at: string;
-}
+};
 
-interface Fact {
+type Fact = {
     id: number;
     fact_type: string;
     statement: string;
     confidence: number;
     is_verified: boolean;
-}
+};
 
-interface MediaAssetItem {
+type MediaAssetItem = {
     id: number;
     type: string;
     version: number;
@@ -89,9 +89,9 @@ interface MediaAssetItem {
     mime_type: string | null;
     size: number;
     status: string;
-}
+};
 
-interface Chapter {
+type Chapter = {
     id: number;
     novel_id: number;
     chapter_number: number;
@@ -102,7 +102,7 @@ interface Chapter {
     imported_at: string;
     analyzed_at: string | null;
     scripted_at: string | null;
-}
+};
 
 const props = defineProps<{
     chapter: Chapter;
@@ -220,7 +220,7 @@ const publishYouTube = () => {
                 <button
                     @click="startOneClickProduction"
                     :disabled="isLaunchingProduction"
-                    class="rounded-lg bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow hover:bg-emerald-500 disabled:opacity-50"
+                    class="rounded-lg bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow hover:bg-emerald-500 disabled:opacity-50 cursor-pointer"
                 >
                     {{ isLaunchingProduction ? 'Launching Pipeline...' : '🚀 One-Click Start' }}
                 </button>
@@ -228,7 +228,7 @@ const publishYouTube = () => {
                 <button
                     @click="runAnalysis"
                     :disabled="isAnalyzing"
-                    class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs font-semibold text-gray-700 shadow-sm hover:bg-gray-50 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                    class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs font-semibold text-gray-700 shadow-sm hover:bg-gray-50 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 cursor-pointer"
                 >
                     {{ isAnalyzing ? 'Analyzing...' : '⚡ Facts' }}
                 </button>
@@ -236,7 +236,7 @@ const publishYouTube = () => {
                 <button
                     @click="generateScript"
                     :disabled="isGeneratingScript"
-                    class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs font-semibold text-gray-700 shadow-sm hover:bg-gray-50 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                    class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs font-semibold text-gray-700 shadow-sm hover:bg-gray-50 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 cursor-pointer"
                 >
                     {{ isGeneratingScript ? 'Drafting...' : '✍ Script' }}
                 </button>
@@ -244,7 +244,7 @@ const publishYouTube = () => {
                 <button
                     @click="generateAudio"
                     :disabled="!script || isGeneratingAudio"
-                    class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs font-semibold text-gray-700 shadow-sm hover:bg-gray-50 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                    class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs font-semibold text-gray-700 shadow-sm hover:bg-gray-50 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 cursor-pointer"
                 >
                     {{ isGeneratingAudio ? 'Synthesizing...' : '🎙 Audio' }}
                 </button>
@@ -252,7 +252,7 @@ const publishYouTube = () => {
                 <button
                     @click="planScenes"
                     :disabled="isPlanningScenes"
-                    class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs font-semibold text-gray-700 shadow-sm hover:bg-gray-50 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                    class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs font-semibold text-gray-700 shadow-sm hover:bg-gray-50 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 cursor-pointer"
                 >
                     {{ isPlanningScenes ? 'Planning...' : '🎨 Visuals' }}
                 </button>
@@ -260,7 +260,7 @@ const publishYouTube = () => {
                 <button
                     @click="renderVideo"
                     :disabled="isRenderingVideo"
-                    class="rounded-lg bg-indigo-600 px-4 py-2 text-xs font-bold text-white shadow hover:bg-indigo-500 disabled:opacity-50"
+                    class="rounded-lg bg-indigo-600 px-4 py-2 text-xs font-bold text-white shadow hover:bg-indigo-500 disabled:opacity-50 cursor-pointer"
                 >
                     {{ isRenderingVideo ? 'Rendering...' : '🎬 Render 1080p' }}
                 </button>
@@ -319,7 +319,7 @@ const publishYouTube = () => {
                         </div>
                         <button
                             @click="showSourceText = !showSourceText"
-                            class="text-xs font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
+                            class="text-xs font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 cursor-pointer"
                         >
                             {{ showSourceText ? 'Hide Source' : 'View Source' }}
                         </button>
@@ -403,7 +403,7 @@ const publishYouTube = () => {
                     <button
                         @click="publishYouTube"
                         :disabled="isPublishingYouTube"
-                        class="mt-4 w-full rounded-lg bg-red-600 px-4 py-2.5 text-xs font-bold text-white shadow hover:bg-red-500 disabled:opacity-50"
+                        class="mt-4 w-full rounded-lg bg-red-600 px-4 py-2.5 text-xs font-bold text-white shadow hover:bg-red-500 disabled:opacity-50 cursor-pointer"
                     >
                         {{ isPublishingYouTube ? 'Uploading Draft...' : '📺 Publish to YouTube' }}
                     </button>

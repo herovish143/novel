@@ -16,12 +16,16 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import { index as novelIndex } from '@/routes/novels';
+import { index as reviewIndex } from '@/routes/reviews';
+import { index as pipelineIndex } from '@/routes/pipeline';
+import { index as costIndex } from '@/routes/costs';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Web Novels',
-        href: '/novels',
+        href: novelIndex.url(),
         icon: BookOpen,
     },
     {
@@ -31,17 +35,17 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Review Queue',
-        href: '/reviews',
+        href: reviewIndex.url(),
         icon: CheckSquare,
     },
     {
         title: 'Pipeline Monitor',
-        href: '/pipeline',
+        href: pipelineIndex.url(),
         icon: Activity,
     },
     {
         title: 'Cost Analytics',
-        href: '/costs',
+        href: costIndex.url(),
         icon: DollarSign,
     },
 ];

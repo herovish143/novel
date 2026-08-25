@@ -3,17 +3,22 @@
 namespace Domain\Script\Data;
 
 use Domain\Script\Models\ScriptSegment;
+use Spatie\LaravelData\Attributes\MapName;
+use Spatie\LaravelData\Attributes\TypeScript;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
+#[TypeScript]
+#[MapName(SnakeCaseMapper::class)]
 class ScriptSegmentData extends Data
 {
     public function __construct(
         public int $id,
-        public int $script_id,
+        public int $scriptId,
         public int $sequence,
         public string $type,
         public string $text,
-        public ?float $estimated_duration,
+        public ?float $estimatedDuration,
         public string $status,
     ) {}
 
@@ -21,11 +26,11 @@ class ScriptSegmentData extends Data
     {
         return new self(
             id: $segment->id,
-            script_id: $segment->script_id,
+            scriptId: $segment->script_id,
             sequence: $segment->sequence,
             type: $segment->type,
             text: $segment->text,
-            estimated_duration: $segment->estimated_duration,
+            estimatedDuration: $segment->estimated_duration,
             status: $segment->status,
         );
     }

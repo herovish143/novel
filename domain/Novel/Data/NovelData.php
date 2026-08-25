@@ -3,25 +3,30 @@
 namespace Domain\Novel\Data;
 
 use Domain\Novel\Models\Novel;
+use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Mappers\SnakeCaseMapper;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
+#[TypeScript]
+#[MapName(SnakeCaseMapper::class)]
 class NovelData extends Data
 {
     public function __construct(
         public int $id,
         public string $title,
         public string $slug,
-        public string $original_language,
-        public string $output_language,
-        public ?string $source_url,
+        public string $originalLanguage,
+        public string $outputLanguage,
+        public ?string $sourceUrl,
         public ?string $description,
-        public string $visual_style,
-        public string $narration_style,
-        public float $max_cost_per_episode,
+        public string $visualStyle,
+        public string $narrationStyle,
+        public float $maxCostPerEpisode,
         public string $status,
-        public ?int $chapters_count = null,
-        public ?int $characters_count = null,
-        public ?int $locations_count = null,
+        public ?int $chaptersCount = null,
+        public ?int $charactersCount = null,
+        public ?int $locationsCount = null,
     ) {}
 
     public static function fromModel(Novel $novel): self
@@ -30,17 +35,17 @@ class NovelData extends Data
             id: $novel->id,
             title: $novel->title,
             slug: $novel->slug,
-            original_language: $novel->original_language,
-            output_language: $novel->output_language,
-            source_url: $novel->source_url,
+            originalLanguage: $novel->original_language,
+            outputLanguage: $novel->output_language,
+            sourceUrl: $novel->source_url,
             description: $novel->description,
-            visual_style: $novel->visual_style,
-            narration_style: $novel->narration_style,
-            max_cost_per_episode: (float) $novel->max_cost_per_episode,
+            visualStyle: $novel->visual_style,
+            narrationStyle: $novel->narration_style,
+            maxCostPerEpisode: (float) $novel->max_cost_per_episode,
             status: $novel->status,
-            chapters_count: $novel->chapters_count ?? null,
-            characters_count: $novel->characters_count ?? null,
-            locations_count: $novel->locations_count ?? null,
+            chaptersCount: $novel->chapters_count ?? null,
+            charactersCount: $novel->characters_count ?? null,
+            locationsCount: $novel->locations_count ?? null,
         );
     }
 }

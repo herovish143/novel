@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Head, useForm, Link } from '@inertiajs/vue3';
+import { store as chapterStoreRoute, show as chapterShowRoute } from '@/routes/chapters';
 
-interface Character {
+type Character = {
     id: number;
     name: string;
     canonical_name: string;
@@ -11,18 +12,18 @@ interface Character {
     physical_description: string | null;
     personality: string | null;
     aliases: { id: number; alias: string }[];
-}
+};
 
-interface Chapter {
+type Chapter = {
     id: number;
     chapter_number: number;
     title: string;
     status: string;
     imported_at: string;
     latest_script?: { id: number; status: string } | null;
-}
+};
 
-interface Novel {
+type Novel = {
     id: number;
     title: string;
     slug: string;
@@ -31,30 +32,41 @@ interface Novel {
     visual_style: string;
     narration_style: string;
     description: string | null;
-}
+};
+
+type PaginatedChapters = {
+    data: Chapter[];
+};
+
+type PaginatedCharacters = {
+    data: Character[];
+};
 
 const props = defineProps<{
     novel: Novel;
-    chapters: Chapter[];
-    characters: Character[];
+    chapters: Chapter[] | PaginatedChapters;
+    characters: Character[] | PaginatedCharacters;
 }>();
+
+const chapterList = ref<Chapter[]>(Array.isArray(props.chapters) ? props.chapters : props.chapters?.data || []);
+const characterList = ref<Character[]>(Array.isArray(props.characters) ? props.characters : props.characters?.data || []);
 
 const activeTab = ref<'chapters' | 'characters'>('chapters');
 const showImportModal = ref(false);
 
 const importForm = useForm({
-    chapter_number: props.chapters.length + 1,
+    chapter_number: chapterList.value.length + 1,
     title: '',
     source_text: '',
     source_url: '',
 });
 
 const submitImport = () => {
-    importForm.post(`/novels/${props.novel.id}/chapters`, {
+    importForm.post(chapterStoreRoute.url(props.novel.id), {
         onSuccess: () => {
             showImportModal.value = false;
             importForm.reset();
-            importForm.chapter_number = props.chapters.length + 2;
+            importForm.chapter_number = chapterList.value.length + 2;
         },
     });
 };
@@ -80,7 +92,7 @@ const submitImport = () => {
 
             <button
                 @click="showImportModal = true"
-                class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500 transition"
+                class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500 transition cursor-pointer"
             >
                 + Import New Chapter
             </button>
@@ -95,10 +107,10 @@ const submitImport = () => {
                         activeTab === 'chapters'
                             ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400 font-bold'
                             : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 font-medium',
-                        'border-b-2 py-2 text-sm transition'
+                        'border-b-2 py-2 text-sm transition cursor-pointer'
                     ]"
                 >
-                    📖 Chapters ({{ chapters.length }})
+                    📖 Chapters ({{ chapterList.length }})
                 </button>
                 <button
                     @click="activeTab = 'characters'"
@@ -106,17 +118,17 @@ const submitImport = () => {
                         activeTab === 'characters'
                             ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400 font-bold'
                             : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 font-medium',
-                        'border-b-2 py-2 text-sm transition'
+                        'border-b-2 py-2 text-sm transition cursor-pointer'
                     ]"
                 >
-                    👤 Persistent Characters ({{ characters.length }})
+                    👤 Persistent Characters ({{ characterList.length }})
                 </button>
             </nav>
         </div>
 
         <!-- Chapters List View -->
         <div v-if="activeTab === 'chapters'" class="space-y-4">
-            <div v-if="chapters.length > 0" class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+            <div v-if="chapterList.length > 0" class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
                 <table class="w-full text-left text-xs">
                     <thead class="bg-gray-50 text-gray-500 uppercase dark:bg-gray-800/50 dark:text-gray-400">
                         <tr>
@@ -128,7 +140,7 @@ const submitImport = () => {
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
-                        <tr v-for="ch in chapters" :key="ch.id" class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30">
+                        <tr v-for="ch in chapterList" :key="ch.id" class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30">
                             <td class="px-6 py-4 font-mono font-bold text-indigo-600 dark:text-indigo-400">
                                 #{{ ch.chapter_number }}
                             </td>
@@ -145,7 +157,7 @@ const submitImport = () => {
                             </td>
                             <td class="px-6 py-4 text-right">
                                 <Link
-                                    :href="`/chapters/${ch.id}`"
+                                    :href="chapterShowRoute.url(ch.id)"
                                     class="font-bold text-indigo-600 hover:underline dark:text-indigo-400"
                                 >
                                     Open Chapter Pipeline →
@@ -164,7 +176,7 @@ const submitImport = () => {
         <!-- Characters List View -->
         <div v-if="activeTab === 'characters'" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             <div
-                v-for="char in characters"
+                v-for="char in characterList"
                 :key="char.id"
                 class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-900"
             >
@@ -183,7 +195,7 @@ const submitImport = () => {
                     {{ char.physical_description || char.personality || 'No description recorded.' }}
                 </p>
 
-                <div v-if="char.aliases.length > 0" class="mt-3 flex flex-wrap gap-1">
+                <div v-if="char.aliases && char.aliases.length > 0" class="mt-3 flex flex-wrap gap-1">
                     <span
                         v-for="alias in char.aliases"
                         :key="alias.id"
@@ -238,14 +250,14 @@ const submitImport = () => {
                     <button
                         type="button"
                         @click="showImportModal = false"
-                        class="rounded-md border border-gray-300 px-4 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+                        class="rounded-md border border-gray-300 px-4 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800 cursor-pointer"
                     >
                         Cancel
                     </button>
                     <button
                         type="submit"
                         :disabled="importForm.processing"
-                        class="rounded-md bg-indigo-600 px-4 py-2 text-xs font-medium text-white shadow hover:bg-indigo-500"
+                        class="rounded-md bg-indigo-600 px-4 py-2 text-xs font-medium text-white shadow hover:bg-indigo-500 cursor-pointer"
                     >
                         Import Chapter
                     </button>

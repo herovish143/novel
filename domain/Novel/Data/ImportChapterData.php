@@ -4,16 +4,32 @@ declare(strict_types=1);
 
 namespace Domain\Novel\Data;
 
+use Domain\Novel\Models\Chapter;
+use Spatie\LaravelData\Attributes\MapName;
+use Spatie\LaravelData\Attributes\TypeScript;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
+#[TypeScript]
+#[MapName(SnakeCaseMapper::class)]
 class ImportChapterData extends Data
 {
     public function __construct(
-        public int $chapter_number,
+        public int $chapterNumber,
         public string $title,
-        public string $source_text,
-        public ?string $source_url = null,
+        public string $sourceText,
+        public ?string $sourceUrl = null,
     ) {}
+
+    public static function fromModel(Chapter $chapter): self
+    {
+        return new self(
+            chapterNumber: $chapter->chapter_number,
+            title: $chapter->title,
+            sourceText: $chapter->source_text,
+            sourceUrl: $chapter->source_url,
+        );
+    }
 
     /**
      * @return array<string, mixed>

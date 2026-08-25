@@ -2,15 +2,15 @@
 import { ref } from 'vue';
 import { Head, useForm, router } from '@inertiajs/vue3';
 
-interface Segment {
+type Segment = {
     id: number;
     sequence: number;
     type: string;
     text: string;
     status: string;
-}
+};
 
-interface Script {
+type Script = {
     id: number;
     chapter_id: number;
     version: number;
@@ -25,25 +25,25 @@ interface Script {
     word_count: number;
     character_count: number;
     segments?: Segment[];
-}
+};
 
-interface ChapterSummary {
+type ChapterSummary = {
     summary: string;
     important_reveals: string[] | null;
-}
+};
 
-interface StoryEvent {
+type StoryEvent = {
     id: number;
     sequence: number;
     description: string;
-}
+};
 
-interface Chapter {
+type Chapter = {
     id: number;
     chapter_number: number;
     title: string;
     novel_id: number;
-}
+};
 
 const props = defineProps<{
     script: Script;
@@ -113,7 +113,7 @@ const approveScript = () => {
                 <button
                     @click="saveDraft"
                     :disabled="form.processing"
-                    class="rounded-lg border border-gray-300 bg-white px-3.5 py-2 text-xs font-semibold text-gray-700 shadow-sm hover:bg-gray-50 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                    class="rounded-lg border border-gray-300 bg-white px-3.5 py-2 text-xs font-semibold text-gray-700 shadow-sm hover:bg-gray-50 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 cursor-pointer"
                 >
                     💾 Save Changes
                 </button>
@@ -121,7 +121,7 @@ const approveScript = () => {
                 <button
                     @click="runVerification"
                     :disabled="isVerifying"
-                    class="rounded-lg bg-amber-600 px-3.5 py-2 text-xs font-semibold text-white shadow hover:bg-amber-500 disabled:opacity-50"
+                    class="rounded-lg bg-amber-600 px-3.5 py-2 text-xs font-semibold text-white shadow hover:bg-amber-500 disabled:opacity-50 cursor-pointer"
                 >
                     {{ isVerifying ? 'Checking...' : '🔍 Fact-Check Verifier' }}
                 </button>
@@ -129,7 +129,7 @@ const approveScript = () => {
                 <button
                     @click="approveScript"
                     :disabled="script.status === 'APPROVED'"
-                    class="rounded-lg bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow hover:bg-emerald-500 disabled:opacity-50"
+                    class="rounded-lg bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow hover:bg-emerald-500 disabled:opacity-50 cursor-pointer"
                 >
                     {{ script.status === 'APPROVED' ? '✓ Approved' : '✓ Approve & Unlock Audio/Visuals' }}
                 </button>
@@ -153,7 +153,7 @@ const approveScript = () => {
             <!-- Left Column: Source Facts & Memory -->
             <div class="space-y-6">
                 <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-                    <h2 class="text-sm font-bold text-gray-900 dark:text-gray-100 uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+                    <h2 class="text-sm font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
                         1. Extracted Chapter Facts
                     </h2>
                     <p v-if="summary" class="mt-3 text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
@@ -174,7 +174,7 @@ const approveScript = () => {
             <!-- Right Column: Hindi Script Editor -->
             <div class="space-y-6">
                 <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900 space-y-4">
-                    <h2 class="text-sm font-bold text-gray-900 dark:text-gray-100 uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+                    <h2 class="text-sm font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
                         Hindi Narration Script Editor
                     </h2>
 
