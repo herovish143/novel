@@ -6,9 +6,10 @@ declare(strict_types=1);
  * Returns an array of changed PHP file paths.
  * Checks git modified, added, staged, and untracked PHP files.
  *
+ * @param  array<int, string>  $allowedPrefixes
  * @return list<string>
  */
-function getChangedPhpFiles(): array
+function getChangedPhpFiles(array $allowedPrefixes = []): array
 {
     $commands = [
         'git diff --name-only --diff-filter=ACMR HEAD',
@@ -31,6 +32,20 @@ function getChangedPhpFiles(): array
                         str_starts_with($file, 'public/')) {
                         continue;
                     }
+
+                    if ($allowedPrefixes !== []) {
+                        $matches = false;
+                        foreach ($allowedPrefixes as $prefix) {
+                            if (str_starts_with($file, $prefix)) {
+                                $matches = true;
+                                break;
+                            }
+                        }
+                        if (! $matches) {
+                            continue;
+                        }
+                    }
+
                     $files[$file] = $file;
                 }
             }

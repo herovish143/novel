@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Inertia\Testing\AssertableInertia;
 use Inertia\Testing\AssertableInertia as Assert;
 use Laravel\Fortify\Features;
 
@@ -21,7 +22,7 @@ test('security page is displayed', function (): void {
     $this->actingAs($user)
         ->withSession(['auth.password_confirmed_at' => time()])
         ->get(route('security.edit'))
-        ->assertInertia(fn (Assert $page): \Inertia\Testing\AssertableInertia => $page
+        ->assertInertia(fn (Assert $page): AssertableInertia => $page
             ->component('settings/Security')
             ->where('canManagePasskeys', true)
             ->where('passkeys', [])
@@ -57,7 +58,7 @@ test('security page renders without two factor when feature is disabled', functi
         ->withSession(['auth.password_confirmed_at' => time()])
         ->get(route('security.edit'))
         ->assertOk()
-        ->assertInertia(fn (Assert $page): \Inertia\Testing\AssertableInertia => $page
+        ->assertInertia(fn (Assert $page): AssertableInertia => $page
             ->component('settings/Security')
             ->where('canManagePasskeys', false)
             ->where('passkeys', [])

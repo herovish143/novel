@@ -4,10 +4,20 @@ declare(strict_types=1);
 
 require_once __DIR__.'/get-changed-files.php';
 
-$files = getChangedPhpFiles();
+$allowedPrefixes = [
+    'app/',
+    'bootstrap/',
+    'config/',
+    'database/',
+    'routes/',
+    'rector.php',
+    'scripts/',
+];
+
+$files = getChangedPhpFiles($allowedPrefixes);
 
 if ($files === []) {
-    echo "No changed PHP files detected.\n";
+    echo "No changed PHP files detected for PHPStan analysis.\n";
     exit(0);
 }
 
