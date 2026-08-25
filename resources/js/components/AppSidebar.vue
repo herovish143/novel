@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, FolderGit2, LayoutGrid } from '@lucide/vue';
+import { BookOpen, CheckSquare, Activity, DollarSign, LayoutGrid } from '@lucide/vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
+import CommandPalette from '@/components/CommandPalette.vue';
 import {
     Sidebar,
     SidebarContent,
@@ -19,21 +20,36 @@ import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
     {
+        title: 'Web Novels',
+        href: '/novels',
+        icon: BookOpen,
+    },
+    {
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+    },
+    {
+        title: 'Review Queue',
+        href: '/reviews',
+        icon: CheckSquare,
+    },
+    {
+        title: 'Pipeline Monitor',
+        href: '/pipeline',
+        icon: Activity,
+    },
+    {
+        title: 'Cost Analytics',
+        href: '/costs',
+        icon: DollarSign,
     },
 ];
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Repository',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: FolderGit2,
-    },
-    {
         title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
+        href: 'https://laravel.com/docs',
         icon: BookOpen,
     },
 ];
@@ -51,6 +67,9 @@ const footerNavItems: NavItem[] = [
                     </SidebarMenuButton>
                 </SidebarMenuItem>
             </SidebarMenu>
+            <div class="px-2 pt-2">
+                <CommandPalette />
+            </div>
         </SidebarHeader>
 
         <SidebarContent>
