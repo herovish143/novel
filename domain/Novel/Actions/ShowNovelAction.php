@@ -21,12 +21,12 @@ class ShowNovelAction
         $chapters = $novel->chapters()
             ->with(['summary', 'latestScript'])
             ->orderBy('chapter_number')
-            ->get();
+            ->paginate(20);
 
         $characters = $novel->characters()
             ->with('aliases')
             ->orderBy('canonical_name')
-            ->get();
+            ->paginate(20);
 
         return [
             'novel' => NovelData::from($novel),

@@ -12,12 +12,12 @@ class ListNovelsAction
 {
     use AsAction;
 
-    public function handle(): \Spatie\LaravelData\DataCollection|\Spatie\LaravelData\PaginatedDataCollection|\Spatie\LaravelData\CursorPaginatedDataCollection|\Illuminate\Support\Enumerable|\Illuminate\Pagination\AbstractPaginator|\Illuminate\Contracts\Pagination\Paginator|\Illuminate\Pagination\AbstractCursorPaginator|\Illuminate\Contracts\Pagination\CursorPaginator|array
+    public function handle()
     {
         $novels = Novel::query()
             ->withCount(['chapters', 'characters', 'locations'])
             ->latest('updated_at')
-            ->get();
+            ->paginate(15);
 
         return NovelData::collect($novels);
     }

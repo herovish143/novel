@@ -10,11 +10,13 @@
         </testsuite>
         <testsuite name="Feature">
             <directory>tests/Feature</directory>
+            <directory>domain</directory>
         </testsuite>
     </testsuites>
     <source>
         <include>
             <directory>app</directory>
+            <directory>domain</directory>
         </include>
     </source>
     <php>

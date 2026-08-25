@@ -15,6 +15,7 @@ class CostsDashboardAction
     public function handle(): array
     {
         $totalSpend = (float) AiUsage::sum('estimated_cost');
+
         $spendByService = AiUsage::query()
             ->selectRaw('service, SUM(estimated_cost) as total_cost, COUNT(*) as count')
             ->groupBy('service')
@@ -43,24 +44,27 @@ class CostsDashboardAction
                 'chapters_count' => $n->chapters_count,
             ]);
 
-        $recentUsages = AiUsage::latest()
-            ->take(15)
-            ->get()
-            ->map(fn ($u): array => [
-                'id' => $u->id,
-                'provider' => $u->provider,
-                'service' => $u->service,
-                'model' => $u->model,
-                'estimated_cost' => (float) $u->estimated_cost,
-                'created_at' => $u->created_at->diffForHumans(),
-            ]);
+        $paginatedUsages = AiUsage::latest()->paginate(15);
+
+        $recentUsagesData = collect($paginatedUsages->items())->map(fn ($u): array => [
+            'id' => $u->id,
+            'provider' => $u->provider,
+            'service' => $u->service,
+            'model' => $u->model,
+            'estimated_cost' => (float) $u->estimated_cost,
+            'created_at' => $u->created_at->diffForHumans(),
+        ]);
 
         return [
             'totalSpend' => round($totalSpend, 4),
             'spendByService' => $spendByService,
             'spendByProvider' => $spendByProvider,
             'novelsCost' => $novelsCost,
-            'recentUsages' => $recentUsages,
+            'recentUsages' => [
+                'data' => $recentUsagesData,
+                'links' => $paginatedUsages->linkCollection()->toArray(),
+                'total' => $paginatedUsages->total(),
+            ],
         ];
     }
 
