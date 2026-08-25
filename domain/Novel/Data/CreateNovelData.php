@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Domain\Novel\Data;
 
 use Domain\Novel\Models\Novel;
+use Illuminate\Http\UploadedFile;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Attributes\TypeScript;
 use Spatie\LaravelData\Data;
@@ -23,6 +24,7 @@ class CreateNovelData extends Data
         public string $visualStyle,
         public string $narrationStyle,
         public float $maxCostPerEpisode,
+        public ?UploadedFile $pdfFile = null,
     ) {}
 
     public static function fromModel(Novel $novel): self
@@ -53,6 +55,7 @@ class CreateNovelData extends Data
             'visual_style' => ['required', 'string', 'max:255'],
             'narration_style' => ['required', 'string', 'max:255'],
             'max_cost_per_episode' => ['required', 'numeric', 'min:0.5'],
+            'pdf_file' => ['nullable', 'file', 'mimes:pdf', 'max:51200'],
         ];
     }
 }

@@ -57,7 +57,15 @@ const form = useForm({
     visual_style: 'dark cinematic fantasy',
     narration_style: 'conversational Hindi explanation',
     max_cost_per_episode: 5.00,
+    pdf_file: null as File | null,
 });
+
+const handlePdfFileSelect = (event: Event) => {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files[0]) {
+        form.pdf_file = target.files[0];
+    }
+};
 
 const submitNovel = () => {
     form.transform((data) => ({
@@ -168,6 +176,20 @@ const submitNovel = () => {
                     <p v-if="form.errors.title" class="mt-1 text-xs text-red-500">{{ form.errors.title }}</p>
                 </div>
 
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Upload PDF Novel Book (Optional)</label>
+                    <input
+                        type="file"
+                        accept=".pdf,application/pdf"
+                        @change="handlePdfFileSelect"
+                        class="w-full text-xs text-gray-500 file:mr-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-xs file:font-semibold file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-indigo-950 dark:file:text-indigo-300"
+                    />
+                    <p class="mt-1 text-[11px] text-gray-400">
+                        Upload a licensed PDF e-book to automatically extract all chapters into the novel upon saving!
+                    </p>
+                    <p v-if="form.errors.pdf_file" class="mt-1 text-xs text-red-500">{{ form.errors.pdf_file }}</p>
+                </div>
+
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-medium text-gray-700 dark:text-gray-300">Source Language *</label>
@@ -224,7 +246,7 @@ const submitNovel = () => {
                         :disabled="form.processing"
                         class="rounded-md bg-indigo-600 px-4 py-2 text-xs font-medium text-white shadow hover:bg-indigo-500 cursor-pointer flex items-center gap-2"
                     >
-                        <span v-if="form.processing">Saving...</span>
+                        <span v-if="form.processing">Saving & Extracting...</span>
                         <span v-else>Save Novel</span>
                     </button>
                 </div>
