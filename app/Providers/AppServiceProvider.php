@@ -3,6 +3,14 @@
 namespace App\Providers;
 
 use Carbon\CarbonImmutable;
+use Domain\Publishing\Services\GoogleYouTubeService;
+use Domain\Publishing\Services\YouTubeService;
+use Domain\Shared\Services\Ai\LanguageModel;
+use Domain\Shared\Services\Ai\OpenAiLanguageModel;
+use Domain\Visual\Services\ImageGenerator;
+use Domain\Visual\Services\OpenAiImageGenerator;
+use Domain\Voice\Services\ElevenLabsSpeechGenerator;
+use Domain\Voice\Services\SpeechGenerator;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
@@ -15,7 +23,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(LanguageModel::class, OpenAiLanguageModel::class);
+        $this->app->bind(SpeechGenerator::class, ElevenLabsSpeechGenerator::class);
+        $this->app->bind(ImageGenerator::class, OpenAiImageGenerator::class);
+        $this->app->bind(YouTubeService::class, GoogleYouTubeService::class);
     }
 
     /**
